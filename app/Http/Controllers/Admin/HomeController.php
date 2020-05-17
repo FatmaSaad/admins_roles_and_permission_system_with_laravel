@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\User;
+use App\Admin;
 use App\UserNotification;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class HomeController extends Controller
 {
@@ -18,13 +20,19 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index() {
+    public function index()
+    {
 
 
-/*        dd(\Auth::user());*/
+        // $role = Role::create(['name' => 'reader']);
+        // $permission1 = Permission::create(['name' => 'edit BOOK']);
+        // $permission2 = Permission::create(['name' => 'edit articles']);
+        // $permission =Permission ::findByName('edit BOOK');
+        // $role = Role::findByName('writer');
+        // $role->syncPermissions($permission);
 
-        return view('admin.home');
+    //    return user()->getAllPermissions();
+  
+    return view('admin.home');
     }
-
-
 }

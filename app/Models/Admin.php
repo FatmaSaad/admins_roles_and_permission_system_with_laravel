@@ -9,7 +9,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class Admin extends Authenticatable
 {
-    use Notifiable,HashPassword,HasRoles;
+    use HasRoles,Notifiable,HashPassword;
     /**
      * The attributes that are mass assignable.
      *

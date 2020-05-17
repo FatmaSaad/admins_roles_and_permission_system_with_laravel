@@ -21,9 +21,21 @@ class CreateAdminsTable extends Migration
             $table->string('password');
             $table->string('phone')->unique()->nullable();
             $table->string('image')->nullable();
+            $table->boolean('active')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });
+         // Insert some super admin
+         DB::table('admins')->insert(
+            array(
+                'name' => 'Super Admin',
+                'email' => 'super@admin.com',
+                'password' => '$2y$10$eKGjwa/aZZtsByWMU8IVhexjMnEFKIj/gel7i4cAKWdxKANuE3Id2',
+                'phone' => '011111111111',
+                'active' => 1,
+                'email_verified_at' => now(),
+            )
+        );
     }
 
     /**

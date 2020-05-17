@@ -1,7 +1,9 @@
 <?php
 namespace App\Http\Controllers\Admin\Auth;
 use App\Admin;
-use App\Http\Controllers\Controller;
+use App\Models\Role;
+use Illuminate\Routing\Controller;
+use App\Http\Requests\AdminRequest ;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -32,7 +34,7 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('admin.guest:admin');
+        $this->middleware(['role:super-admin']);
     }
     /**
      * Get a validator for an incoming registration request.
@@ -54,13 +56,26 @@ class RegisterController extends Controller
      * @param array $data
      * @return \App\Admin
      */
+    public function register(AdminRequest $request)
+    {
+       $admin = $this->create($request->all());
+
+        return redirect($this->redirectPath());
+    }
     protected function create(array $data)
     {
-        return Admin::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => $data['password'],
-        ]);
+        $admin = new Admin();
+        $fields           = collect(\Schema::getColumnListing('admins'));
+        $data['password'] = bcrypt($data['password']);
+        foreach ($fields as $field) {
+            if (isset($data[$field])) {
+                $admin->$field = $data[$field];
+            }
+        }
+
+        $admin->save();
+        $admin->roles()->sync(request('role_id'));
+        return route('admin.show');
     }
     /**
      * Show the application registration form.
@@ -68,8 +83,8 @@ class RegisterController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function showRegistrationForm()
-    {
-        return view('admin.auth.register');
+    {   $roles = Role::all();
+        return view('admin.auth.register',compact('roles'));
     }
     /**
      * Get the guard to be used during registration.
@@ -79,5 +94,30 @@ class RegisterController extends Controller
     protected function guard()
     {
         return Auth::guard('admin');
+    }
+
+    public function edit(Admin $admin)
+    {
+        $roles = Role::all();
+
+        return view('admin.admins.edit', compact('admin', 'roles'));
+    }
+
+    public function update(Admin $admin, AdminRequest $request)
+    {
+        $request['active'] = request('activation') ?? 0;
+        unset($request['activation']);
+        $admin->update($request->except('role_id'));
+        $admin->roles()->sync(request('role_id'));
+
+        return redirect(route('admin.show'))->with('message', "{$admin->name} details are successfully updated");
+    }
+
+    public function destroy(Admin $admin)
+    {
+        $prefix = config('multiauth.prefix');
+        $admin->delete();
+
+        return redirect(route('admin.show'))->with('message', "You have deleted {$prefix} successfully");
     }
 }
