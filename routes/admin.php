@@ -7,7 +7,16 @@ Route::group(['namespace' => 'Admin'], function () {
 
     Route::group(['middleware' => ['admin.auth:admin']], function () {
 
-        Route::group(['namespace' => 'Admins'], function () {
+      
+
+        Route::group(['namespace' => 'Auth'], function () {
+
+            // Register Admins
+            Route::get('register', 'RegisterController@showRegistrationForm')->name('admin.register');
+            Route::post('register', 'RegisterController@register');
+            Route::get('/{admin}/edit', 'RegisterController@edit')->name('admin.edit');
+            Route::delete('/{admin}', 'RegisterController@destroy')->name('admin.delete');
+            Route::patch('/{admin}', 'RegisterController@update')->name('admin.update');
 
             // Admin Lists
             Route::get('/show', 'AdminController@show')->name('admin.show');
@@ -34,18 +43,7 @@ Route::group(['namespace' => 'Admin'], function () {
             Route::patch('/permission/{permission}', 'PermissionController@update')->name('admin.permission.update');
         });
 
-        Route::group(['namespace' => 'Auth'], function () {
-
-            // Register Admins
-            Route::get('register', 'RegisterController@showRegistrationForm')->name('admin.register');
-            Route::post('register', 'RegisterController@register');
-            Route::get('/{admin}/edit', 'RegisterController@edit')->name('admin.edit');
-            Route::delete('/{admin}', 'RegisterController@destroy')->name('admin.delete');
-            Route::patch('/{admin}', 'RegisterController@update')->name('admin.update');
-        });
-
         Route::get('/', 'HomeController@index')->name('admin.dashboard');
-
     });
     Route::group(['namespace' => 'Auth'], function () {
         // Login and Logout
