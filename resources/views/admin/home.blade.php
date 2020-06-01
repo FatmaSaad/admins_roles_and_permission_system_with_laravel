@@ -13,8 +13,9 @@
                             {{ session('status') }}
                         </div>
                     @endif
+                    {{ __('auth.login.first_page_you_see') }}
 
-                    You are logged in!
+
                 </div>
             </div>
         </div>

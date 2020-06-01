@@ -3,11 +3,9 @@
 use Illuminate\Support\Facades\Route;
 
 
-Route::group(['namespace' => 'Admin'], function () {
+Route::group(['namespace' => 'Admin','middleware'=>'language'], function () {
 
     Route::group(['middleware' => ['admin.auth:admin']], function () {
-
-      
 
         Route::group(['namespace' => 'Auth'], function () {
 

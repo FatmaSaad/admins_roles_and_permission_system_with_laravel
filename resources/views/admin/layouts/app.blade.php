@@ -27,7 +27,7 @@
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ route('admin.dashboard') }}">
-                     Admin 
+                     Admin
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse"
                     data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -56,10 +56,27 @@
                             </li>
                         @endhasrole
                     </ul>
-
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
-                        <!-- Authentication Links -->
+                             <!-- Language -->
+                             @php $locale = session()->get('locale'); @endphp
+                             <li class="nav-item dropdown">
+                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                     @switch($locale)
+                                         @case('ar')
+                                         <img src="{{asset('img/ar.png')}}" width="30px" height="20x"> Arabic
+                                         @break
+                                         @default
+                                         <img src="{{asset('img/en.png')}}" width="30px" height="20x"> English
+                                     @endswitch
+                                     <span class="caret"></span>
+                                 </a>
+                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                     <a class="dropdown-item" href="{{ route('Language', 'en') }}"><img src="{{asset('img/en.png')}}" width="30px" height="20x"> English</a>
+                                     <a class="dropdown-item" href="{{ route('Language', 'ar') }}"><img src="{{asset('img/ar.png')}}" width="30px" height="20x"> Arabic</a>
+
+                                 </div>
+                             </li>
                         @guest('admin')
                         <li class="nav-item">
                             <a class="nav-link" href="{{route('admin.login')}}">{{ ucfirst(config('multiauth.prefix'))
